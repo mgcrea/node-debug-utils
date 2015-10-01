@@ -2,9 +2,6 @@
   "name": "debug-utils",
   "version": "0.1.1",
   "main": "lib/index.js",
-  "bin": {
-    "ptools": "bin/ptools"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "babel --stage 0 -d lib/ src/",
