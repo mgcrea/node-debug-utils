@@ -2,28 +2,28 @@
 import util from 'util';
 import chalk from 'chalk';
 
-global.d = (...args) => {
+export const d = (...args) => {
   const time = new Date().toISOString();
   util.log(chalk.white.bgRed(time) + ' - ' + chalk.red('break') + ': ' + util.inspect.call(null, args.length === 1 ? args[0] : args, false, 10, true));
 };
 
-global.dd = (...args) => {
-  global.d.apply(null, args);
+export const dd = (...args) => {
+  d.apply(null, args);
   const stack = new Error().stack.split('\n');
   stack.splice(1, 1);
   util.log(stack.join('\n'));
   process.exit(1);
 };
 
-global.df = (...args) => {
-  global.d(searchInObjectValues.apply(null, args));
+export const df = (...args) => {
+  d(searchInObjectValues.apply(null, args));
 };
 
-global.dp = (obj) => {
+export const dp = (obj) => {
   return Object.getOwnPropertyNames(Object.getPrototypeOf(obj));
 };
 
-function searchInObjectValues(source, search = '', path = '', visited = [], results = []) {
+export const searchInObjectValues = (source, search = '', path = '', visited = [], results = []) => {
   if (Array.isArray(source)) {
     source.forEach((obj, index) => {
       searchInObjectValues(obj, search, path + '[' + index + ']', visited, results);
@@ -44,6 +44,11 @@ function searchInObjectValues(source, search = '', path = '', visited = [], resu
   return results;
 }
 
-export default {
-  searchInObjectValues
-};
+export default function assignToGlobals() {
+  Object.assign(global, {
+    d,
+    dd,
+    df,
+    dp
+  });
+}
