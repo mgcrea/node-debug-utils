@@ -15,6 +15,11 @@ export const dd = (...args) => {
   process.exit(1);
 };
 
+export const dt = (...args) => {
+  d.apply(null, args);
+  throw new Error('debug');
+};
+
 export const df = (...args) => {
   d(searchInObjectValues.apply(null, args));
 };
