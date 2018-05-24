@@ -53,6 +53,7 @@ export default function assignToGlobals() {
   Object.assign(global, {
     d,
     dd,
+    dt,
     df,
     dp
   });
