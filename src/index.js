@@ -1,18 +1,27 @@
-
-import util from 'util';
+import {log, inspect as baseInspect} from 'util';
 import chalk from 'chalk';
+
+const inspect = maybeObject =>
+  baseInspect(maybeObject, {compact: true, colors: true, depth: Infinity, breakLength: Infinity});
 
 export const d = (...args) => {
   const time = new Date().toISOString();
-  util.log(chalk.white.bgRed(time) + ' - ' + chalk.red('break') + ': ' + util.inspect.call(null, args.length === 1 ? args[0] : args, false, 10, true));
+  log(`🚨  ${chalk.white.bgRed(time)} - ${chalk.red('break')}: ${inspect(args.length === 1 ? args[0] : args)}`);
+  if (process.env.NODE_DEBUG === '1') {
+    const stack = new Error('Breakpoint').stack.split('\n');
+    stack.splice(1, 1);
+    log(stack.join('\n'));
+  }
 };
 
 export const dd = (...args) => {
   d.apply(null, args);
-  const stack = new Error().stack.split('\n');
+  const stack = new Error('Breakpoint').stack.split('\n');
   stack.splice(1, 1);
-  util.log(stack.join('\n'));
-  process.exit(1);
+  log(stack.join('\n'));
+  process.nextTick(() => {
+    process.exit(1);
+  });
 };
 
 export const dt = (...args) => {
@@ -24,7 +33,7 @@ export const df = (...args) => {
   d(searchInObjectValues.apply(null, args));
 };
 
-export const dp = (obj) => {
+export const dp = obj => {
   return Object.getOwnPropertyNames(Object.getPrototypeOf(obj));
 };
 
@@ -41,15 +50,17 @@ export const searchInObjectValues = (source, search = '', path = '', visited = [
     Object.keys(source).forEach(key => {
       try {
         searchInObjectValues(source[key], search, path + '.' + key, visited, results);
-      } catch (err) {/**/}
+      } catch (err) {
+        /**/
+      }
     });
   } else if (search instanceof RegExp ? search.test(source) : source === search) {
     results.push({value: source, path});
   }
   return results;
-}
+};
 
-export default function assignToGlobals() {
+export const install = () => {
   Object.assign(global, {
     d,
     dd,
@@ -57,4 +68,6 @@ export default function assignToGlobals() {
     df,
     dp
   });
-}
+};
+
+export default install;
