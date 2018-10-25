@@ -1,12 +1,15 @@
 import {log, inspect as baseInspect} from 'util';
 import chalk from 'chalk';
 
+const VERBOSE_MODE = process.env.NODE_DEBUG_VERBOSE === '1';
+
 const inspect = maybeObject =>
-  baseInspect(maybeObject, {compact: true, colors: true, depth: Infinity, breakLength: Infinity});
+  baseInspect(maybeObject, {compact: !VERBOSE_MODE, colors: true, depth: 20, breakLength: VERBOSE_MODE ? 0 : Infinity});
 
 export const d = (...args) => {
   const time = new Date().toISOString();
-  log(`🚨 ${chalk.white.bgRed(time)} - ${chalk.red('break')}: ${inspect(args.length === 1 ? args[0] : args)}`);
+  const inspected = inspect(args.length === 1 ? args[0] : args);
+  log(`🚨 ${chalk.white.bgRed(time)} - ${chalk.red('break')}: ${inspected}`);
   if (process.env.NODE_DEBUG === '1') {
     const stack = new Error('Breakpoint').stack.split('\n');
     stack.splice(1, 1);
