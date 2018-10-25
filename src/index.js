@@ -6,7 +6,7 @@ const inspect = maybeObject =>
 
 export const d = (...args) => {
   const time = new Date().toISOString();
-  log(`🚨  ${chalk.white.bgRed(time)} - ${chalk.red('break')}: ${inspect(args.length === 1 ? args[0] : args)}`);
+  log(`🚨 ${chalk.white.bgRed(time)} - ${chalk.red('break')}: ${inspect(args.length === 1 ? args[0] : args)}`);
   if (process.env.NODE_DEBUG === '1') {
     const stack = new Error('Breakpoint').stack.split('\n');
     stack.splice(1, 1);
