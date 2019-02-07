@@ -1,4 +1,6 @@
-import {log, inspect as baseInspect} from 'util';
+// docs https://github.com/nodejs/node/blob/master/lib/internal/console/constructor.js
+
+import {inspect as baseInspect} from 'util';
 import chalk from 'chalk';
 
 const VERBOSE_MODE = process.env.NODE_DEBUG_VERBOSE === '1';
@@ -9,19 +11,15 @@ const inspect = maybeObject =>
 export const d = (...args) => {
   const time = new Date().toISOString();
   const inspected = inspect(args.length === 1 ? args[0] : args);
-  log(`🚨 ${chalk.white.bgRed(time)} - ${chalk.red('break')}: ${inspected}`);
+  console.warn(`🚨 ${chalk.white.bgRed(time)} - ${chalk.red('break')}: ${inspected}`);
   if (process.env.NODE_DEBUG === '1') {
-    const stack = new Error('Breakpoint').stack.split('\n');
-    stack.splice(1, 1);
-    log(stack.join('\n'));
+    console.trace();
   }
 };
 
 export const dd = (...args) => {
   d.apply(null, args);
-  const stack = new Error('Breakpoint').stack.split('\n');
-  stack.splice(1, 1);
-  log(stack.join('\n'));
+  console.trace();
   process.nextTick(() => {
     process.exit(1);
   });

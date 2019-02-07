@@ -1,5 +1,7 @@
-.history/
-node_modules/
-src/
-.DS_Store
-npm-debug.log
+*
+.*
+LICENSE
+README.md
+package.json
+!lib/**/*.js
+!lib/**/*.js.map

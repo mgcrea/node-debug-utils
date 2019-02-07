@@ -3,9 +3,11 @@
   "version": "0.4.3",
   "main": "lib/index.js",
   "scripts": {
-    "test": "eslint src",
-    "build": "babel src/ -d lib/ -s",
-    "build:watch": "npm run build -- -w",
+    "test": "yarn pretty && yarn lint",
+    "lint": "eslint src/ test/",
+    "pretty": "prettier --check 'src/**/*.js'",
+    "build": "babel --source-maps --out-dir lib/ --delete-dir-on-start --ignore **/__tests__ src/",
+    "build:watch": "yarn build --watch --verbose",
     "prepublish": "npm run build"
   },
   "dependencies": {
