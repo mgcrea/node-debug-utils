@@ -1,12 +1,14 @@
-// docs https://github.com/nodejs/node/blob/master/lib/internal/console/constructor.js
+// @docs https://github.com/nodejs/node/blob/master/lib/internal/console/constructor.js
+// @docs https://nodejs.org/api/util.html#util_util_inspect_object_options
 
 import {inspect as baseInspect} from 'util';
 import chalk from 'chalk';
 
-const VERBOSE_MODE = process.env.NODE_DEBUG_VERBOSE === '1';
+const COMPACT = process.env.NODE_DEBUG_COMPACT ? true : false;
+const BREAK_LENGTH = process.env.NODE_DEBUG_BREAK_LENGTH ? process.env.NODE_DEBUG_BREAK_LENGTH * 1 : 100;
 
 const inspect = maybeObject =>
-  baseInspect(maybeObject, {compact: !VERBOSE_MODE, colors: true, depth: 20, breakLength: VERBOSE_MODE ? 0 : Infinity});
+  baseInspect(maybeObject, {compact: COMPACT, colors: true, depth: 20, breakLength: BREAK_LENGTH});
 
 export const d = (...args) => {
   const time = new Date().toISOString();
