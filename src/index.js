@@ -22,9 +22,9 @@ export const d = (...args) => {
 export const dd = (...args) => {
   d.apply(null, args);
   console.trace();
-  process.nextTick(() => {
+  setTimeout(() => {
     process.exit(1);
-  });
+  }, 50);
 };
 
 export const dt = (...args) => {
