@@ -21,10 +21,7 @@ export const d = (...args) => {
 
 export const dd = (...args) => {
   d.apply(null, args);
-  console.trace();
-  setTimeout(() => {
-    process.exit(1);
-  }, 50);
+  process.exit(1);
 };
 
 export const dt = (...args) => {
